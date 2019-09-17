@@ -24,7 +24,7 @@ class Package(j.baseclasses.threebot_package):
         static_location.name = "static"
         static_location.path_url = "/"
         static_location.path_location = f"/sanbox/code/github/pishoy/www_enertia_io"
-        static_location.use_jumpscale_weblibs = True
+        static_location.use_jumpscale_weblibs = False
         website.domain = 'www.enertia.io'
         website.path = '/sanbox/code/github/pishoy/www_enertia_io'
         locations.configure()
