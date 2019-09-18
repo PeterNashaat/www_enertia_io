@@ -8,35 +8,40 @@ class Package(j.baseclasses.threebot_package):
         else:
             self.branch = "master"
 
+        self.threefold_io_repo = "https://github.com/Pishoy/www_enertia_io"
+
     def prepare(self):
         """
-        is called at install time
+        called when the 3bot starts
         :return:
         """
-        server = self.openresty
-        server.install(reset=True)
+
+        server = j.servers.openresty.get("websites")
+        server.install(reset=False)
         server.configure()
         website = server.websites.get("www_enertia_io")
-        website.ssl = True
-        website.port = 443
-        locations = website.locations.get("main")
-        static_location = locations.locations_static.new()
-        static_location.name = "static"
-        static_location.path_url = "/"
-        static_location.path_location = f"/sanbox/code/github/pishoy/www_enertia_io"
-        static_location.use_jumpscale_weblibs = False
-        website.domain = 'www.enertia.io'
-        website.path = '/sanbox/code/github/pishoy/www_enertia_io'
+        website.ssl = False
+        website.port = 80
+        locations = website.locations.get("www_enertia_io")
+
+        website_location = locations.locations_static.new()
+        website_location.name = "enertia_io"
+        website_location.path_url = "/"
+        website_location.use_jumpscale_weblibs = True
+
+        path = j.clients.git.getContentPathFromURLorPath(self.threefold_io_repo, branch=self.branch, pull=True)
+        j.sal.fs.chown(path, "www", "www")
+        website_location.path_location = path
         locations.configure()
         website.configure()
-
 
     def start(self):
         """
         called when the 3bot starts
         :return:
         """
-        self.prepare()
+        server = j.servers.openresty.get("websites")
+        server.start()
 
     def stop(self):
         """
@@ -51,5 +56,3 @@ class Package(j.baseclasses.threebot_package):
         :return:
         """
         pass
-
-
