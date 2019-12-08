@@ -1,7 +1,7 @@
 [source]
 name = "enertia_io"
 description = "enertia_io website"
-threebot = "zerobot"
+threebot = "enertia"
 version = "1.0.0"
 
 [actor]
