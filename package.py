@@ -1,58 +1,27 @@
 from Jumpscale import j
 
-
 class Package(j.baseclasses.threebot_package):
-    def _init(self, **kwargs):
-        if "branch" in kwargs.keys():
-            self.branch = kwargs["branch"]
-        else:
-            self.branch = "master"
+    """
+    kosmos -p
+    cl = j.servers.threebot.local_start_default()
+    j.threebot.packages.zerobot.packagemanager.actors.package_manager.package_add(git_url="https://github.com/Pishoy/www_enertia_io")
+    """
 
-        self.threefold_io_repo = "https://github.com/Pishoy/www_enertia_io"
+    def _init(self, **kwargs):
+        self.branch = kwargs["package"].branch or "master"
+        self.enertia_io = "https://github.com/Pishoy/www_enertia_io"
 
     def prepare(self):
-        """
-        called when the 3bot starts
-        :return:
-        """
-
-        server = j.servers.openresty.get("websites")
-        server.install(reset=False)
-        server.configure()
-        website = server.websites.get("www_enertia_io")
-        website.ssl = False
-        website.port = 80
-        locations = website.locations.get("www_enertia_io")
-
-        website_location = locations.locations_static.new()
-        website_location.name = "enertia_io"
-        website_location.path_url = "/"
-        website_location.use_jumpscale_weblibs = True
-
-        path = j.clients.git.getContentPathFromURLorPath(self.threefold_io_repo, branch=self.branch, pull=True)
-        j.sal.fs.chown(path, "www", "www")
-        website_location.path_location = path
+        website = self.openresty.get_from_port(443)
+        locations = website.locations.get("enertia")
+        static_location = locations.locations_static.new()
+        static_location.name = "static"
+        static_location.path_url = "/enertia"
+        path = j.clients.git.getContentPathFromURLorPath(self.enertia_io, branch=self.branch, pull=True)
+        static_location.path_location = path
+        static_location.use_jumpscale_weblibs = True # if set, will copy weblibs and serve it from /static/weblibs directly
         locations.configure()
         website.configure()
 
     def start(self):
-        """
-        called when the 3bot starts
-        :return:
-        """
-        server = j.servers.openresty.get("websites")
-        server.start()
-
-    def stop(self):
-        """
-        called when the 3bot stops
-        :return:
-        """
-        pass
-
-    def uninstall(self):
-        """
-        called when the package is no longer needed and will be removed from the threebot
-        :return:
-        """
-        pass
+        self.prepare()
