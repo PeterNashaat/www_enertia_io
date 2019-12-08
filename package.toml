@@ -1,7 +1,7 @@
 [source]
 name = "enertia_io"
 description = "enertia_io website"
-threebot = "enertia"
+threebot = "enertia_author"
 version = "1.0.0"
 
 [actor]
