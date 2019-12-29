@@ -1,13 +1,13 @@
 [source]
 name = "enertiaio"
-description = "enertia_io website"
+description = "enertiaio website"
 threebot = "enertiaa"
 version = "1.0.0"
 
 [actor]
-namespace = "enertia_io_act_ns" 
+namespace = "enertiaioactns" 
 
 [[bcdbs]]
-namespace = "enertia_io_ns"
+namespace = "enertiaions"
 type = "redis"
 instance = "default"
