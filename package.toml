@@ -1,13 +1,6 @@
 [source]
 name = "enertiaio"
 description = "enertiaio website"
-threebot = "enertiaa"
+threebot = "threefold"
 version = "1.0.0"
 
-[actor]
-namespace = "enertiaioactns" 
-
-[[bcdbs]]
-namespace = "enertiaions"
-type = "redis"
-instance = "default"
